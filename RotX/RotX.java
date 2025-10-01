@@ -1,15 +1,29 @@
 public class RotX{
     final static char[] MIN = "aàäbcçdeéèëfghiíìïjklmnñoóòöpqrstuúùüvwxyz".toCharArray();
     final static char[] MAJ = "aàäbcçdeéèëfghiíìïjklmnñoóòöpqrstuúùüvwxyz".toUpperCase().toCharArray();
-    final static 
 
-    public static void main(String[] args) {
-        String cadena[] = {"ABC", "xyz", "Hola, Mr colçot", "Perdó, per tu què és?"};
-        int rota[] = {2, 4, 12, 20}; 
+    public static void main (String[] args) {
+        String cadena[] = {"ABC", "xyz", "Hola, Mr colçot", "Perdó, per tu què és?", "Hanna"};
+        String cadenaXifrada[] = new String[cadena.length];
+        int rota[] = {0, 2, 4, 12, 20};
+        int nXifra = 3;  
 
+        System.out.printf("%nXIFRAT%n");
+        System.out.println("--------");
         for (int i = 0; i < cadena.length; i++){
-            System.out.println(xifraRotX(cadena[i], rota[i]));
+            System.out.printf("(%d) %-25s => %s%n",rota[i], cadena[i], xifraRotX(cadena[i], rota[i]));
+            cadenaXifrada[i] = xifraRotX(cadena[i], rota[i]) ;
         }
+
+        System.out.printf("%nDESXIFRAT%n");
+        System.out.println("--------");
+        for (int i = 0; i < cadenaXifrada.length; i++){
+            System.out.printf("(%d) %-25s => %s%n", rota[i], cadenaXifrada[i], desxifraRotX(cadenaXifrada[i], rota[i]));
+        }
+
+        System.out.printf("%nMissatge xifrat: %s%n---------%n", cadenaXifrada[nXifra]);
+        imprimirStrArray(forcaBrutaX(cadenaXifrada[nXifra]));
+        
     }
 
     public static String xifraRotX(String cadena, int desplaçament){
@@ -22,48 +36,64 @@ public class RotX{
         }
         return textXifrat; 
     }
-    /*
+
+    public static char xifraC(char lletra, int n){
+        if (esTrobaPosicioArray(lletra, MIN)>=0){
+            return lletraXPosicio(xifraPosicio(lletra, MIN, n), MIN);  
+        }else if (esTrobaPosicioArray(lletra, MAJ)>=0){
+            return lletraXPosicio(xifraPosicio(lletra, MAJ, n), MAJ);
+        }
+        return lletra;                 
+    }
+
+    public static int xifraPosicio(char lletra, char[] array, int despl){
+        int pos = esTrobaPosicioArray(lletra, array);
+        if (pos >= ((array.length)-despl)){
+            pos = (pos+despl)%array.length; 
+        } else {
+            pos += despl;
+        }
+        return pos; 
+    }
+    
     public static String desxifraRotX(String cadena, int desplaçament){ 
         char[] cadenaC = cadena.toCharArray(); 
         String textDesxifrat = ""; 
 
         for (int i = 0; i <= cadena.length()-1; i++){
             char lletra = cadenaC[i];
-            boolean gran = false;
-            if (Character.isLetter(lletra)){
-
-                if (Character.isUpperCase(lletra)){
-                    gran = true; 
-                }
-
-                lletra = Character.toLowerCase(lletra);
-                int pos = posicio(lletra);
-
-                if (pos == -1){ // no està a l'array, l'afegim tal qual
-                    textDesxifrat += lletra; 
-                    continue; 
-                }
-
-                // desplaçar 13 enrere (amb volta si cal)
-                pos -= 13;
-                if (pos < 0) pos += lletres.length;
-
-                // mirar si era maj i afegir la lletra corresponent
-                if (gran){
-                    textDesxifrat += Character.toUpperCase(lletraXPosicio(pos)); 
-                }else{
-                    textDesxifrat += lletraXPosicio(pos);
-                }
-            }else {
-                textDesxifrat += lletra; 
-            }
+            textDesxifrat += desxifraC(lletra, desplaçament);
         }
-        return textDesxifrat; }
+        return textDesxifrat; 
+    }
+
+    public static char desxifraC (char lletra, int n){
+        if (esTrobaPosicioArray(lletra, MIN)>=0){
+            return lletraXPosicio(desxifraPosicio(lletra, MIN, n), MIN);  
+        }else if (esTrobaPosicioArray(lletra, MAJ)>=0){
+            return lletraXPosicio(desxifraPosicio(lletra, MAJ, n), MAJ);
+        }
+        return lletra;                 
+    }
     
-    public static String forcaBrutaX(String cadenaXifrada){}
-*/
+    public static int desxifraPosicio(char lletra, char[] array, int despl){
+        int pos = (esTrobaPosicioArray(lletra, array)-despl);
+        if (pos < 0){
+            pos += array.length;
+        }
+        return pos; 
+    }
     
-    public static int esTrobaPosicioArray(char character, String[] array){
+    public static String[] forcaBrutaX(String cadenaXifrada){
+        String[] cadenesDesxifrades = new String[MIN.length];
+
+        for (int i = 0; i < MIN.length; i++){
+            cadenesDesxifrades[i] = desxifraRotX(cadenaXifrada, i);
+        }
+        return cadenesDesxifrades;
+    }
+
+    public static int esTrobaPosicioArray(char character, char[] array){
         for (int i = 0; i < array.length; i++){
             char c = array[i];
             if (character == c){ 
@@ -72,27 +102,14 @@ public class RotX{
         }
         return -1; 
     }
-
-    public static char xifraC(char lletra, int n){
-        if (esTrobaPosicioArray(lletra, MIN)>=0){
-            return lletraXPosicio(posicio(lletra, MIN, n), MIN);  
-        }else if (esTrobaPosicioArray(lletra, MAJ)>=0){
-            return lletraXPosicio(posicio(lletra, MAJ, n), MAJ);
-        }
-        return lletra;                 
-    }
-
-    public static int posicio(char lletra, String[] array, int despl){
-        int pos = esTrobaPosicioArray(lletra, array);
-        if (pos >= ((array.length)-despl)){
-            pos = (pos+despl)%lletres.length; 
-        } else {
-            pos += despl;
-        }
-        return pos; 
-    }
-
-    public static char lletraXPosicio(int pos, String[] array){
+    
+    public static char lletraXPosicio(int pos, char[] array){
         return array[pos];
+    }
+
+    public static void imprimirStrArray(String[] array){
+        for (int i = 0; i < array.length; i++){
+            System.out.printf("(%d) -> %s%n",i, array[i]);
+        }
     }
 }
