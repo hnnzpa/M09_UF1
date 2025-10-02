@@ -19,7 +19,7 @@ public class Monoalfabetic {
         for (int i = 0; i < original.length; i++) {
             String paraula = original[i]; 
             xifrat[i] = xifraMonoAlfa(paraula);
-            System.out.printf("%s -> %s%n", paraula, xifrat[i]);
+            System.out.printf("%-20s -> %s%n", paraula, xifrat[i]);
             
         }
 
@@ -27,7 +27,7 @@ public class Monoalfabetic {
         for (int i = 0; i < xifrat.length; i++) {
             String paraula = xifrat[i]; 
             String desxifrada = desxifraMonoAlfa(paraula);
-            System.out.printf("%s -> %s%n", paraula, desxifrada);
+            System.out.printf("%-20s -> %s%n", paraula, desxifrada);
             
         }
         System.out.println();
@@ -73,7 +73,6 @@ public class Monoalfabetic {
         return cadenaDesxifrada; 
     }
 
-    //no funciona bé
     public static char desxifraC(char lletra){
         for (int i = 0; i < PERM.length; i++) {
             char lletraXifrada = PERM[i];
